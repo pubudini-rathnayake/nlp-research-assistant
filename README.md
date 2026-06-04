@@ -1,48 +1,71 @@
 # 🔬 NLP Research Assistant
 
-> A full-stack AI-powered research assistant that uses Retrieval-Augmented Generation (RAG) to upload, search, summarize, compare NLP research papers, and track research trends — built with Python, FastAPI, LangChain, ChromaDB, and React.
+> A full-stack SaaS AI-powered research assistant that uses Retrieval-Augmented Generation (RAG) to upload, search, summarize, compare NLP research papers, and track research trends — built with Python, FastAPI, LangChain, ChromaDB, and React.
 
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)](https://langchain.com/)
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
-[![ChromaDB](https://img.shields.io/badge/ChromaDB-FF6719?style=for-the-badge&logo=data:image/png;base64,&logoColor=white)](https://www.trychroma.com/)
+[![ChromaDB](https://img.shields.io/badge/ChromaDB-FF6719?style=for-the-badge&logoColor=white)](https://www.trychroma.com/)
 [![Google Gemini](https://img.shields.io/badge/Google_Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://aistudio.google.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 
 ---
 
 ## ✨ Overview
 
-NLP Research Assistant is a full-stack RAG-powered platform designed for researchers, students, and academics to interact with NLP research papers intelligently.
+NLP Research Assistant is a full-stack SaaS RAG-powered platform designed for researchers, students, and academics to interact with NLP research papers intelligently.
 
 Instead of just searching keywords, you can **upload your own research papers**, **ask questions and get cited answers**, **compare multiple papers**, and **discover research trends** — all powered by real AI using Google Gemini embeddings and LangChain RAG pipelines.
+
+Built as a complete SaaS product with **Free, Pro, and Team subscription plans**, usage-based limits, and a full user management system.
+
+---
+
+## 💼 SaaS Pricing Plans
+
+| Feature | 🆓 Free | ⭐ Pro | 👥 Team |
+|---|---|---|---|
+| Papers uploaded | 3 papers | Unlimited | Unlimited |
+| Questions per day | 10 | Unlimited | Unlimited |
+| Paper comparisons | 1 | Unlimited | Unlimited |
+| Trend analysis | ❌ | ✅ | ✅ |
+| Team workspace | ❌ | ❌ | Up to 10 members |
+| Shared paper library | ❌ | ❌ | ✅ |
+| Priority AI responses | ❌ | ✅ | ✅ |
+| Price | Free | $9.99/month | $29.99/month |
+
+> 💡 Payments are simulated for portfolio demonstration purposes.
 
 ---
 
 ## 🎯 Features
 
-### 📄 Version 1 — Paper Upload & Q&A
-- Upload NLP research papers in PDF format
-- Automatic text extraction and chunking
-- Store paper embeddings in ChromaDB vector database
-- Ask questions and get AI answers with citations from the paper
+### 📄 Version 1 — Core RAG + Auth + SaaS Structure
+- User registration and JWT authentication
+- PDF upload and automatic text extraction
+- LangChain RAG pipeline with ChromaDB vector storage
+- Ask questions and get AI answers with citations
+- Free / Pro / Team plan enforcement
+- SaaS dashboard with usage tracking
 
 ### 🔍 Version 2 — Search & Summarization
 - Search papers by topic, keyword, or concept
 - AI-generated summaries of individual papers
-- Cited answers — every response references the exact paper section
+- Cited answers referencing exact paper sections
 - Filter papers by year, author, or topic
 
 ### ⚖️ Version 3 — Paper Comparison
-- Compare two or more research papers side by side
-- Find similarities and differences in methodology, results, and conclusions
-- AI-generated comparison report with visual highlights
+- Compare two or more papers side by side
+- Find similarities and differences in methodology and results
+- AI-generated comparison report
 
-### 📈 Version 4 — Trend Analysis
+### 📈 Version 4 — Trend Analysis & Team Workspace
 - Track how NLP research topics evolved over time
 - Visualize research landscape across uploaded papers
-- Identify emerging topics and declining research areas
-- AI-generated trend summary report
+- Identify emerging and declining research areas
+- Team workspace — invite members and share paper libraries
+- Admin dashboard — manage users and plan upgrades
 
 ---
 
@@ -52,39 +75,41 @@ Instead of just searching keywords, you can **upload your own research papers**,
 | Technology | Purpose |
 |---|---|
 | Python 3.11 | Core programming language |
-| FastAPI | REST API framework |
+| FastAPI | REST API framework with auto Swagger docs |
 | LangChain | RAG pipeline orchestration |
-| ChromaDB | Vector database for embeddings |
+| ChromaDB | Vector database for paper embeddings |
 | Google Gemini 2.5 | LLM for answers and summaries |
 | Google Gemini Embeddings | Text embedding generation |
 | PyMuPDF | PDF text extraction |
-| PostgreSQL | Relational database for metadata |
-| JWT | Authentication |
+| PostgreSQL | Relational database for users and metadata |
+| JWT | Stateless authentication |
 
 ### Frontend
 | Technology | Purpose |
 |---|---|
 | React + Vite | Frontend framework and build tool |
 | Tailwind CSS | Utility-first styling |
-| Axios | HTTP client |
-| React Router DOM | Client-side routing |
+| Framer Motion | Smooth animations |
+| Axios | HTTP client with JWT interceptor |
+| React Router DOM | Client-side routing with protected routes |
+| Recharts | Data visualization for trend analysis |
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ RAG Architecture
 
 ```plaintext
 User uploads PDF
        ↓
-FastAPI receives file
+FastAPI receives and validates file
        ↓
-PyMuPDF extracts text
+PyMuPDF extracts raw text
        ↓
-LangChain splits into chunks
+LangChain splits text into chunks
        ↓
 Gemini Embeddings converts chunks to vectors
        ↓
-ChromaDB stores vectors
+ChromaDB stores vectors with metadata
        ↓
 User asks a question
        ↓
@@ -107,58 +132,67 @@ React displays answer with source reference
 nlp-research-assistant/
 │
 ├── backend/
-│   ├── main.py                    # FastAPI entry point
-│   ├── requirements.txt           # Python dependencies
-│   ├── .env.example               # Environment variables template
+│   ├── main.py                      # FastAPI entry point
+│   ├── requirements.txt             # Python dependencies
+│   ├── .env.example                 # Environment variables template
 │   │
 │   ├── routers/
-│   │   ├── auth.py                # Authentication endpoints
-│   │   ├── papers.py              # Paper upload and management
-│   │   ├── search.py              # Search and Q&A endpoints
-│   │   ├── compare.py             # Paper comparison endpoints
-│   │   └── trends.py              # Trend analysis endpoints
+│   │   ├── auth.py                  # Register, login endpoints
+│   │   ├── papers.py                # Upload, list, delete papers
+│   │   ├── search.py                # Q&A and search endpoints
+│   │   ├── compare.py               # Paper comparison endpoints
+│   │   ├── trends.py                # Trend analysis endpoints
+│   │   └── plans.py                 # SaaS plan management
 │   │
 │   ├── services/
-│   │   ├── rag_service.py         # LangChain RAG pipeline
-│   │   ├── embedding_service.py   # Gemini embedding generation
-│   │   ├── pdf_service.py         # PDF processing
-│   │   ├── search_service.py      # Vector search logic
-│   │   └── gemini_service.py      # Gemini AI integration
+│   │   ├── rag_service.py           # LangChain RAG pipeline
+│   │   ├── embedding_service.py     # Gemini embedding generation
+│   │   ├── pdf_service.py           # PDF processing with PyMuPDF
+│   │   ├── search_service.py        # Vector search logic
+│   │   ├── gemini_service.py        # Gemini AI integration
+│   │   └── plan_service.py          # Plan limits enforcement
 │   │
 │   ├── models/
-│   │   ├── user.py                # User database model
-│   │   └── paper.py               # Paper database model
+│   │   ├── user.py                  # User model with plan field
+│   │   ├── paper.py                 # Paper model
+│   │   └── team.py                  # Team workspace model
 │   │
 │   ├── database/
-│   │   ├── postgres.py            # PostgreSQL connection
-│   │   └── chroma.py              # ChromaDB connection
+│   │   ├── postgres.py              # PostgreSQL connection
+│   │   └── chroma.py                # ChromaDB connection
 │   │
 │   └── utils/
-│       ├── jwt.py                 # JWT token utilities
-│       └── chunker.py             # Text chunking strategies
+│       ├── jwt.py                   # JWT token utilities
+│       └── chunker.py               # Text chunking strategies
 │
 ├── frontend/
 │   ├── src/
-│   │   ├── main.jsx               # React entry point
-│   │   ├── App.jsx                # Route definitions
+│   │   ├── main.jsx                 # React entry point
+│   │   ├── App.jsx                  # Routes with plan-based guards
 │   │   │
 │   │   ├── api/
-│   │   │   └── axios.js           # Axios with JWT interceptor
+│   │   │   └── axios.js             # Axios with JWT interceptor
 │   │   │
 │   │   ├── pages/
-│   │   │   ├── LoginPage.jsx      # Login page
-│   │   │   ├── RegisterPage.jsx   # Register page
-│   │   │   ├── DashboardPage.jsx  # Main dashboard
-│   │   │   ├── UploadPage.jsx     # PDF upload page
-│   │   │   ├── SearchPage.jsx     # Search and Q&A page
-│   │   │   ├── ComparePage.jsx    # Paper comparison page
-│   │   │   └── TrendsPage.jsx     # Trend analysis page
+│   │   │   ├── LandingPage.jsx      # SaaS landing page with pricing
+│   │   │   ├── LoginPage.jsx        # Login page
+│   │   │   ├── RegisterPage.jsx     # Register with plan selection
+│   │   │   ├── DashboardPage.jsx    # Main dashboard with usage stats
+│   │   │   ├── UploadPage.jsx       # PDF upload with plan limits
+│   │   │   ├── SearchPage.jsx       # Q&A search interface
+│   │   │   ├── ComparePage.jsx      # Paper comparison interface
+│   │   │   ├── TrendsPage.jsx       # Trend visualization
+│   │   │   ├── PricingPage.jsx      # Pricing plans page
+│   │   │   └── TeamPage.jsx         # Team workspace management
 │   │   │
 │   │   └── components/
-│   │       ├── Navbar.jsx         # Navigation bar
-│   │       ├── PaperCard.jsx      # Paper display card
-│   │       ├── AnswerCard.jsx     # Q&A answer display
-│   │       └── TrendChart.jsx     # Trend visualization
+│   │       ├── Navbar.jsx           # Navigation with plan badge
+│   │       ├── PaperCard.jsx        # Paper display card
+│   │       ├── AnswerCard.jsx       # Q&A answer with citations
+│   │       ├── PlanBadge.jsx        # Free/Pro/Team badge
+│   │       ├── UsageBar.jsx         # Usage limit progress bar
+│   │       ├── PricingCard.jsx      # Pricing plan card
+│   │       └── TrendChart.jsx       # Recharts trend visualization
 │   │
 │   ├── package.json
 │   └── vite.config.js
@@ -176,7 +210,7 @@ nlp-research-assistant/
 - Python 3.9 or higher
 - Node.js 18 or higher
 - PostgreSQL
-- Google Gemini API key (free at [aistudio.google.com](https://aistudio.google.com/apikey))
+- Google Gemini API key — free at [aistudio.google.com](https://aistudio.google.com/apikey)
 
 ### Backend Setup
 
@@ -210,7 +244,7 @@ DATABASE_URL=postgresql://username:password@localhost:5432/nlp_research_db
 CHROMA_PERSIST_DIR=./chroma_store
 ```
 
-#### 5. Create the database
+#### 5. Create the PostgreSQL database
 ```sql
 CREATE DATABASE nlp_research_db;
 ```
@@ -220,10 +254,10 @@ CREATE DATABASE nlp_research_db;
 uvicorn main:app --reload
 ```
 
-#### 7. Backend is running at
+#### 7. Backend running at
 http://localhost:8000
 
-#### 8. View auto-generated API docs at
+#### 8. Auto-generated API docs at
 http://localhost:8000/docs
 
 ---
@@ -253,35 +287,50 @@ http://localhost:5173
 ## 🔌 API Endpoints
 
 ### Auth
-| Method | Endpoint | Description | Auth Required |
+| Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| POST | `/api/auth/register` | Register new user | ❌ |
+| POST | `/api/auth/register` | Register with plan selection | ❌ |
 | POST | `/api/auth/login` | Login and get JWT | ❌ |
+| GET | `/api/auth/me` | Get current user + plan | ✅ |
 
 ### Papers
-| Method | Endpoint | Description | Auth Required |
+| Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| POST | `/api/papers/upload` | Upload PDF paper | ✅ |
-| GET | `/api/papers` | Get all uploaded papers | ✅ |
+| POST | `/api/papers/upload` | Upload PDF (plan limits apply) | ✅ |
+| GET | `/api/papers` | Get all user papers | ✅ |
 | GET | `/api/papers/{id}` | Get specific paper | ✅ |
 | DELETE | `/api/papers/{id}` | Delete paper | ✅ |
 
 ### Search & Q&A
-| Method | Endpoint | Description | Auth Required |
+| Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| POST | `/api/search/query` | Ask a question about papers | ✅ |
+| POST | `/api/search/query` | Ask question about papers | ✅ |
 | POST | `/api/search/summarize/{id}` | Summarize a paper | ✅ |
 | GET | `/api/search/topic` | Search papers by topic | ✅ |
 
 ### Compare
-| Method | Endpoint | Description | Auth Required |
+| Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| POST | `/api/compare` | Compare two or more papers | ✅ |
+| POST | `/api/compare` | Compare two or more papers | ✅ Pro+ |
 
 ### Trends
-| Method | Endpoint | Description | Auth Required |
+| Method | Endpoint | Description | Auth |
 |---|---|---|---|
-| GET | `/api/trends` | Get research trend analysis | ✅ |
+| GET | `/api/trends` | Get trend analysis | ✅ Pro+ |
+
+### Plans
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| GET | `/api/plans` | Get all available plans | ❌ |
+| POST | `/api/plans/upgrade` | Simulate plan upgrade | ✅ |
+| GET | `/api/plans/usage` | Get current usage stats | ✅ |
+
+### Team
+| Method | Endpoint | Description | Auth |
+|---|---|---|---|
+| POST | `/api/team/invite` | Invite team member | ✅ Team |
+| GET | `/api/team/members` | Get team members | ✅ Team |
+| GET | `/api/team/papers` | Get shared paper library | ✅ Team |
 
 ---
 
