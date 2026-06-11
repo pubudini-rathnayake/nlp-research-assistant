@@ -74,14 +74,14 @@ Built as a complete SaaS product with **Free, Pro, and Team subscription plans**
 ### Backend
 | Technology | Purpose |
 |---|---|
-| Python 3.11 | Core programming language |
+| Python 3.13 | Core programming language |
 | FastAPI | REST API framework with auto Swagger docs |
 | LangChain | RAG pipeline orchestration |
 | ChromaDB | Vector database for paper embeddings |
-| Google Gemini 2.5 | LLM for answers and summaries |
-| Google Gemini Embeddings | Text embedding generation |
+| Google Gemini 2.5 Flash Lite | LLM for answers and summaries |
+| Google Gemini Embedding 001 | Text embedding generation |
 | PyMuPDF | PDF text extraction |
-| PostgreSQL | Relational database for users and metadata |
+| MySQL | Relational database for users and metadata |
 | JWT | Stateless authentication |
 
 ### Frontend
@@ -148,22 +148,18 @@ nlp-research-assistant/
 │   │   ├── rag_service.py           # LangChain RAG pipeline
 │   │   ├── embedding_service.py     # Gemini embedding generation
 │   │   ├── pdf_service.py           # PDF processing with PyMuPDF
-│   │   ├── search_service.py        # Vector search logic
 │   │   ├── gemini_service.py        # Gemini AI integration
 │   │   └── plan_service.py          # Plan limits enforcement
 │   │
 │   ├── models/
 │   │   ├── user.py                  # User model with plan field
-│   │   ├── paper.py                 # Paper model
-│   │   └── team.py                  # Team workspace model
+│   │   └── paper.py                 # Paper model
 │   │
 │   ├── database/
-│   │   ├── postgres.py              # PostgreSQL connection
-│   │   └── chroma.py                # ChromaDB connection
+│   │   └── database.py              # MySQL connection
 │   │
 │   └── utils/
-│       ├── jwt.py                   # JWT token utilities
-│       └── chunker.py               # Text chunking strategies
+│       └── jwt.py                   # JWT token utilities
 │
 ├── frontend/
 │   ├── src/
@@ -182,17 +178,14 @@ nlp-research-assistant/
 │   │   │   ├── SearchPage.jsx       # Q&A search interface
 │   │   │   ├── ComparePage.jsx      # Paper comparison interface
 │   │   │   ├── TrendsPage.jsx       # Trend visualization
-│   │   │   ├── PricingPage.jsx      # Pricing plans page
-│   │   │   └── TeamPage.jsx         # Team workspace management
+│   │   │   └── PricingPage.jsx      # Pricing plans page
 │   │   │
 │   │   └── components/
 │   │       ├── Navbar.jsx           # Navigation with plan badge
 │   │       ├── PaperCard.jsx        # Paper display card
 │   │       ├── AnswerCard.jsx       # Q&A answer with citations
 │   │       ├── PlanBadge.jsx        # Free/Pro/Team badge
-│   │       ├── UsageBar.jsx         # Usage limit progress bar
-│   │       ├── PricingCard.jsx      # Pricing plan card
-│   │       └── TrendChart.jsx       # Recharts trend visualization
+│   │       └── UsageBar.jsx         # Usage limit progress bar
 │   │
 │   ├── package.json
 │   └── vite.config.js
@@ -201,7 +194,6 @@ nlp-research-assistant/
 ├── .gitignore
 └── LICENSE
 ```
-
 ---
 
 ## 🚀 Getting Started
@@ -209,7 +201,7 @@ nlp-research-assistant/
 ### Prerequisites
 - Python 3.9 or higher
 - Node.js 18 or higher
-- PostgreSQL
+- MySQL 8.0
 - Google Gemini API key — free at [aistudio.google.com](https://aistudio.google.com/apikey)
 
 ### Backend Setup
@@ -240,13 +232,17 @@ Fill in your values:
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
 JWT_SECRET=your_long_random_jwt_secret_here
-DATABASE_URL=postgresql://username:password@localhost:5432/nlp_research_db
+DATABASE_HOST=localhost
+DATABASE_PORT=3306
+DATABASE_NAME=nlp_research_db
+DATABASE_USER=root
+DATABASE_PASSWORD=your_mysql_password
 CHROMA_PERSIST_DIR=./chroma_store
 ```
 
-#### 5. Create the PostgreSQL database
+#### 5. Create the MySQL database
 ```sql
-CREATE DATABASE nlp_research_db;
+CREATE DATABASE IF NOT EXISTS nlp_research_db;
 ```
 
 #### 6. Run the backend
@@ -359,7 +355,32 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 ---
 
 ## 🌱 Project Status
-Version 1 — 🔄 In Progress
+
+```
+Version 1 — ✅ Complete
+  ✓ JWT authentication with Free/Pro/Team plan selection
+  ✓ PDF upload with PyMuPDF text extraction
+  ✓ LangChain RAG pipeline with ChromaDB vector storage
+  ✓ Gemini AI embeddings (gemini-embedding-001)
+  ✓ AI paper summarization on upload
+  ✓ Q&A with cited answers
+  ✓ Paper comparison with AI report
+  ✓ Trend analysis (Pro/Team only)
+  ✓ SaaS usage tracking and plan limits
+  ✓ Full React frontend with all pages
+
 Version 2 — 📋 Planned
+  - Advanced search filters (year, author, topic)
+  - Paper tagging and categorization
+  - Export comparison reports as PDF
+
 Version 3 — 📋 Planned
+  - Team workspace with shared paper library
+  - Collaborative Q&A sessions
+  - Admin dashboard
+
 Version 4 — 📋 Planned
+  - Trend visualization with Recharts
+  - Citation network graph
+  - Mobile responsive improvements
+```
