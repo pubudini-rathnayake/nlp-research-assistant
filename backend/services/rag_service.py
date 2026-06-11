@@ -3,6 +3,7 @@ from langchain_chroma import Chroma
 from services.embedding_service import get_embeddings
 from dotenv import load_dotenv
 import os
+import time
 
 load_dotenv()
 
@@ -19,11 +20,14 @@ def store_paper_in_chroma(text: str, paper_id: int, title: str) -> str:
     collection_name = f"paper_{paper_id}"
 
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
+        chunk_size=2000,   # larger chunks = fewer embeddings needed
         chunk_overlap=200,
         length_function=len
     )
     chunks = text_splitter.split_text(text)
+
+    # Limit to first 50 chunks to stay within free tier limits
+    chunks = chunks[:50]
 
     metadatas = [
         {
@@ -35,7 +39,15 @@ def store_paper_in_chroma(text: str, paper_id: int, title: str) -> str:
     ]
 
     vectorstore = get_chroma_client(collection_name)
-    vectorstore.add_texts(texts=chunks, metadatas=metadatas)
+
+    # Process in small batches with delay to avoid rate limits
+    batch_size = 10
+    for i in range(0, len(chunks), batch_size):
+        batch_chunks = chunks[i:i + batch_size]
+        batch_metadatas = metadatas[i:i + batch_size]
+        vectorstore.add_texts(texts=batch_chunks, metadatas=batch_metadatas)
+        if i + batch_size < len(chunks):
+            time.sleep(3)  # wait 3 seconds between batches
 
     return collection_name
 
